@@ -23,7 +23,25 @@ public class Tasks
     {
         new Thread(() ->
         {
-            NavTree.cunstructTree(projName, nameSpace);
+            String myProjName = projName;
+            String myNamespace = nameSpace;
+
+            if(myProjName == null) myProjName = "";
+            if(myNamespace == null) myNamespace = "";
+
+            if(!myProjName.matches("[a-z0-9_]+"))
+            {
+                new DialogErrorNameInvalid(myProjName);
+                return;
+            }
+
+            if(!myNamespace.matches("[a-z0-9_]+"))
+            {
+                new DialogErrorNameInvalid(myNamespace);
+                return;
+            }
+
+            NavTree.cunstructTree(projName, myNamespace);
             if(project != null)
                 project.dispose();
         }, "Tree Constructor").start();

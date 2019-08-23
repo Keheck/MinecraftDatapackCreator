@@ -20,6 +20,7 @@ public class NavTree
 
     public static void cunstructTree(String projName, String nameSpace)
     {
+        if("".equals(nameSpace) || nameSpace == null) nameSpace = projName;
         NavTreeFolder root = new NavTreeFolder(FOLDER, projName);
         JTree tree = Main.navTree;
         tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
