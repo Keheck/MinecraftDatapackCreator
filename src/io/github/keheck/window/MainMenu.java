@@ -80,7 +80,7 @@ public class MainMenu
             file.add(deleteFile);
             file.add(newFile);
 
-            settings = new JMenu("Settings");
+            settings = new JMenu("Project Settings");
                 commandsOnly = new JCheckBoxMenuItem("Use Minecraft commands only");
                 settings.add(commandsOnly);
 
@@ -96,6 +96,10 @@ public class MainMenu
 
         return menuBar;
     }
+
+    public static void setUseComments(boolean value) { keepComments.setState(value); }
+
+    public static void setUseVanilla(boolean value) { commandsOnly.setState(value); }
 
     private static void setupActions()
     {

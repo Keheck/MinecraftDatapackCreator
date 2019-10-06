@@ -6,12 +6,15 @@ import io.github.keheck.util.Log;
 import io.github.keheck.tree.AbstractNavTreeNode;
 import io.github.keheck.tree.NavTreeFile;
 import io.github.keheck.tree.NavTreeFolder;
+import io.github.keheck.window.MainMenu;
+import io.github.keheck.window.dialogs.DialogProjectSaved;
 
 import javax.swing.*;
 import javax.swing.tree.TreeNode;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
@@ -26,15 +29,15 @@ public class Save
     {
         cleanDirtyFile();
 
-        File file = new File(Directories.projectsDir, project);
-        Log.f1("Starting saving process of " + project);
+        File root = new File(Directories.projectsDir, project);
+        Log.i("Starting saving process of " + project);
         try
         {
-            if(!file.exists())
-                file.mkdirs();
+            if(!root.exists())
+                root.mkdirs();
 
-            AbstractNavTreeNode root = (AbstractNavTreeNode)Main.navTree.getModel().getRoot();
-            Enumeration<TreeNode> namespaces = root.children();
+            AbstractNavTreeNode nodeRoot = (AbstractNavTreeNode)Main.navTree.getModel().getRoot();
+            Enumeration<TreeNode> namespaces = nodeRoot.children();
 
             while(namespaces.hasMoreElements())
             {
@@ -42,21 +45,28 @@ public class Save
 
                 if(space instanceof NavTreeFolder)
                 {
-                    handleFolder((NavTreeFolder)space, file);
+                    handleFolder((NavTreeFolder)space, root);
                 }
                 else if(space instanceof NavTreeFile)
                 {
-                    handleFile((NavTreeFile)space, file);
+                    handleFile((NavTreeFile)space, root);
                 }
             }
+
+            File projMeta = new File(root, "settings.meta");
+            projMeta.createNewFile();
+            String keepComments = "keepComments=" + MainMenu.keepComments.getState();
+            String useCommands = "useVanilla=" + MainMenu.commandsOnly.getState();
+            Files.write(projMeta.toPath(), (keepComments + System.lineSeparator() + useCommands).getBytes(), StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
         }
         catch (IOException e)
         {
-            Log.e("Failed to save project! Ending saving process...");
+            Log.e("Failed to save project " + project + ":", e);
             e.printStackTrace();
         }
 
-        Log.f1("Finished saving process! PRoject is saved at " + file.getAbsolutePath());
+        Log.i("Finished saving process! Project is saved at " + root.getAbsolutePath());
+        new DialogProjectSaved(root.getAbsolutePath());
     }
 
     /**

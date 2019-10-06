@@ -1,5 +1,6 @@
 package io.github.keheck;
 
+import io.github.keheck.project.saveandload.ConfigValue.ValueType;
 import io.github.keheck.util.Directories;
 import io.github.keheck.util.Log;
 import io.github.keheck.util.OSUtils;
@@ -11,6 +12,7 @@ import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 import javax.swing.tree.DefaultTreeModel;
 import java.awt.*;
 import java.io.File;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -27,6 +29,8 @@ public class Main
     private static boolean killed = false;
 
     public static HashMap<NavTreeFile, ArrayList<String>> texts = new HashMap<>();
+    public static final HashMap<String, ValueType> keyTypes = new HashMap<>();
+    public static final HashMap<String, Method> valueSetters = new HashMap<>();
 
     public static String project;
 
@@ -70,10 +74,26 @@ public class Main
         splitPane.setOneTouchExpandable(false);
         frame.add(splitPane);
         Tasks.onNewProject("project", "name", null);
-        frame.setResizable(false);
         frame.setVisible(true);
 
         Log.f1("Setup UI!");
-        Log.i("Created by Keheck!");
+        Log.i("Setting up metadata handlers");
+
+        keyTypes.put("keepComments", ValueType.BOOL);
+        keyTypes.put("useVanilla", ValueType.BOOL);
+
+        try
+        {
+            Method methKeepComments = MainMenu.class.getDeclaredMethod("setUseComments", boolean.class);
+            Method methUseCommands = MainMenu.class.getDeclaredMethod("setUseVanilla", boolean.class);
+
+            valueSetters.put("keepComments", methKeepComments);
+            valueSetters.put("useVanilla", methUseCommands);
+        }
+        catch (NoSuchMethodException e)
+        {
+            Log.e("Failed to load method!", e);
+            e.printStackTrace();
+        }
     }
 }

@@ -1,6 +1,7 @@
 package io.github.keheck.project.saveandload;
 
 import io.github.keheck.Main;
+import io.github.keheck.util.Log;
 import io.github.keheck.window.NavTree;
 import io.github.keheck.window.dialogs.DialogLoadProject;
 import io.github.keheck.tree.AbstractNavTreeNode.NodeType;
@@ -8,11 +9,15 @@ import io.github.keheck.tree.NavTreeFile;
 import io.github.keheck.tree.NavTreeFolder;
 
 import javax.swing.tree.DefaultTreeModel;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 public class Load
 {
@@ -27,8 +32,10 @@ public class Load
 
     public static void load(File root)
     {
+        Log.i("Loading project at " + root.getPath() + "...");
         Main.texts.clear();
         Main.project = root.getName();
+        HashMap<String, ConfigValue> configValues = new HashMap<>();
 
         File[] files = root.listFiles();
         try
@@ -40,6 +47,34 @@ public class Load
 
                 for(File f : files)
                 {
+                    if(f.getName().equals("settings.meta"))
+                    {
+                        BufferedReader reader = new BufferedReader(new FileReader(f));
+
+                        ArrayList<String> lines = new ArrayList<>();
+                        String fline;
+                        while((fline = reader.readLine()) != null) lines.add(fline);
+
+                        reader.close();
+
+                        for(String line : lines)
+                        {
+                            String key = line.split("=")[0];
+                            ConfigValue.ValueType type = Main.keyTypes.get(key);
+
+                            switch (type)
+                            {
+                                case BOOL:
+                                    Boolean value = Boolean.parseBoolean(line.split("=")[1]);
+                                    try { Main.valueSetters.get(key).invoke(Load.class, value); }
+                                    catch(IllegalAccessException | IllegalArgumentException | InvocationTargetException e) { e.printStackTrace(); }
+                                    break;
+                            }
+                        }
+
+                        continue;
+                    }
+
                     if(f.isDirectory())
                     {
                         addFolderNode(rootNode, new NavTreeFolder(NodeType.NAMESPACE, f.getName()), f);
@@ -54,6 +89,7 @@ public class Load
             }
         }catch (IOException e)
         {
+            Log.e("An I/O error occured while loading " + root.getPath() + ":", e);
             e.printStackTrace();
         }
 
