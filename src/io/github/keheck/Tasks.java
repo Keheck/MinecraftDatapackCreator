@@ -1,6 +1,7 @@
 package io.github.keheck;
 
 import io.github.keheck.project.compiling.Compiler;
+import io.github.keheck.util.Log;
 import io.github.keheck.util.Validator;
 import io.github.keheck.window.NavTree;
 import io.github.keheck.window.dialogs.*;
@@ -31,13 +32,13 @@ public class Tasks
 
             if(!myProjName.matches("[a-z0-9_]+"))
             {
-                new DialogErrorNameInvalid(myProjName);
+                new DialogErrorNameInvalid(myProjName, project);
                 return;
             }
 
             if(!myNamespace.matches("[a-z0-9_]+"))
             {
-                new DialogErrorNameInvalid(myNamespace);
+                new DialogErrorNameInvalid(myNamespace, project);
                 return;
             }
 
@@ -65,6 +66,8 @@ public class Tasks
 
     public static void createNewFile(String fileName, NodeType fileType, AbstractNavTreeNode parent, DialogNewFile dialog)
     {
+        Log.f1("Attempting to create new file");
+
         if(Validator.isValidString(fileName, fileType))
         {
             Enumeration<TreeNode> nodes = parent.children();
@@ -96,6 +99,8 @@ public class Tasks
 
     public static void createNamespace(String folderName, JDialog dialog)
     {
+        Log.f1("Attempting to create new namespace");
+
         if(Validator.isValidString(folderName, NodeType.NAMESPACE))
         {
             if(Validator.isValidNamespace(folderName))
@@ -121,7 +126,7 @@ public class Tasks
             }
             else
             {
-                new DialogErrorNamespaceReserved(folderName);
+                new DialogErrorNamespaceReserved(folderName, dialog);
             }
         }
         else
@@ -132,6 +137,8 @@ public class Tasks
 
     public static void createFolder(String folderName, JDialog dialog, AbstractNavTreeNode parent)
     {
+        Log.f1("Attempting to create new folder");
+
         if(Validator.isValidString(folderName, NodeType.FOLDER))
         {
             Enumeration<TreeNode> children = parent.children();
@@ -169,7 +176,7 @@ public class Tasks
         new Thread(() -> Compiler.init(destination), "Compiler Thread").start();
     }
 
-    private static class DialogUpdater extends Thread
+    public static class DialogUpdater extends Thread
     {
         private DialogDynamic dialog = new DialogDynamic();
 
@@ -192,6 +199,11 @@ public class Tasks
 
                 dialog.cycle();
             }
+        }
+
+        public void updateDialog(String newTask)
+        {
+            dialog.updateTask(newTask);
         }
     }
 }

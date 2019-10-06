@@ -1,5 +1,7 @@
 package io.github.keheck.window.dialogs;
 
+import io.github.keheck.util.Log;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -10,10 +12,12 @@ public class DialogErrorNameSame extends JDialog
     public DialogErrorNameSame(JDialog owner)
     {
         super(owner, "ERROR");
-        JLabel label = new JLabel("Ther's already a file with that name!");
-        ok = new JButton("Ok");
         JPanel host = new JPanel();
         this.add(host);
+
+        Log.i("Opening dialog DialogErrorNameSame");
+        ok = new JButton("Ok");
+        JLabel label = new JLabel("There's already a file with that name!");
 
         GroupLayout layout = new GroupLayout(host);
         host.setLayout(layout);

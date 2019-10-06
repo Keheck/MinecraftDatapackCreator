@@ -1,6 +1,7 @@
 package io.github.keheck.window.dialogs;
 
 import io.github.keheck.Main;
+import io.github.keheck.util.Log;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,13 +10,14 @@ public class DialogErrorNamespaceReserved extends JDialog
 {
     private JButton ok;
 
-    public DialogErrorNamespaceReserved(String name)
+    public DialogErrorNamespaceReserved(String name, JDialog dialog)
     {
-        super(Main.frame, "Namaspace Reserved!");
+        super(dialog, "Namaspace Reserved!");
 
         JPanel panel = new JPanel();
         this.add(panel);
 
+        Log.i("Opening dialog DialogErrorNamespaceReserved");
         ok = new JButton("Ok");
         JLabel label = new JLabel("This name is alreade reserved for compilation namespaces:");
         JPanel textWrapper = new JPanel();

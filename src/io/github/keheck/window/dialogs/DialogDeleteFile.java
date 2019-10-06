@@ -3,6 +3,7 @@ package io.github.keheck.window.dialogs;
 import io.github.keheck.Main;
 import io.github.keheck.Tasks;
 import io.github.keheck.tree.AbstractNavTreeNode;
+import io.github.keheck.util.Log;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,6 +17,7 @@ public class DialogDeleteFile extends JDialog
     public DialogDeleteFile(AbstractNavTreeNode node)
     {
         super(Main.frame, "Delete");
+        Log.i("Opening dialog DialogDeleteFile");
         JLabel delete = new JLabel("You are about to delete: ");
         JLabel file = new JLabel(node.toString());
         JLabel question = new JLabel("Are you sure? (Children will be deleted as well)");

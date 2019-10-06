@@ -1,6 +1,7 @@
 package io.github.keheck.window.dialogs;
 
 import io.github.keheck.Main;
+import io.github.keheck.util.Log;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,7 +13,8 @@ public class DialogCompilationSuccess extends JDialog
     public DialogCompilationSuccess(String loc)
     {
         super(Main.frame, "Compilation finisehd!");
-        JLabel label = new JLabel("Compilation finished successfuly!" + System.lineSeparator() + "Project was saved at: " + loc);
+        Log.i("Opening Dialog DialogCompilationSuccess");
+        JLabel label = new JLabel("<html><body>Compilation finished successfuly! Project was saved at: <br>" + loc + "</body></html>");
         ok = new JButton("Ok");
         JPanel host = new JPanel();
         this.add(host);

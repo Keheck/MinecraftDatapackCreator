@@ -2,6 +2,7 @@ package io.github.keheck.window.dialogs;
 
 import io.github.keheck.Main;
 import io.github.keheck.Tasks;
+import io.github.keheck.util.Log;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,10 +20,10 @@ public class DialogNewProject extends JDialog
         JPanel panel = new JPanel();
         this.add(panel);
 
+        Log.i("Opening dialog DialogNewProject");
+
         GroupLayout layout = new GroupLayout(panel);
         panel.setLayout(layout);
-
-        setAlwaysOnTop(true);
 
         layout.setAutoCreateGaps(true);
         layout.setAutoCreateContainerGaps(true);

@@ -56,7 +56,8 @@ public class Icons
 
     private static ImageIcon loadIcon(String path)
     {
-        final String imagePath = "/icons/";
+        Log.i("Loading image " + path);
+        String imagePath = "/icons/";
         BufferedImage image;
         InputStream stream = null;
 
@@ -68,7 +69,7 @@ public class Icons
         }
         catch (IOException e)
         {
-            Log.e("Failed to load: " + imagePath + path);
+            Log.e("Failed to load: " + imagePath + path, e);
         }
         finally
         {

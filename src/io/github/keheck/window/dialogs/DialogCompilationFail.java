@@ -2,6 +2,7 @@ package io.github.keheck.window.dialogs;
 
 import io.github.keheck.Main;
 import io.github.keheck.util.Directories;
+import io.github.keheck.util.Log;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,7 +14,8 @@ public class DialogCompilationFail extends JDialog
     public DialogCompilationFail()
     {
         super(Main.frame, "Compilation finisehd!");
-        JLabel label = new JLabel("Compilation has failed! View the error log at " + System.lineSeparator() + Directories.rootDir.getAbsolutePath() + "/error.txt for more information");
+        Log.i("Opening dialog DialogCompilationFail");
+        JLabel label = new JLabel("<html><body>Compilation has failed! View the error log at " + "<br>" + Directories.rootDir.getAbsolutePath() + "/error.txt <br> for more information</body></html>");
         ok = new JButton("Ok");
         JPanel host = new JPanel();
         this.add(host);

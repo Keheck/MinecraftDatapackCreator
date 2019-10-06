@@ -3,6 +3,7 @@ package io.github.keheck.window.dialogs;
 import io.github.keheck.Main;
 import io.github.keheck.Tasks;
 import io.github.keheck.tree.AbstractNavTreeNode;
+import io.github.keheck.util.Log;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,10 +18,11 @@ public class DialogNewFolder extends JDialog
     public DialogNewFolder(AbstractNavTreeNode parent)
     {
         super(Main.frame, "New Folder");
-
         JPanel host = new JPanel();
-        JLabel label = new JLabel("Folder");
         add(host);
+
+        Log.i("Opening dialog DialogNewFolder");
+        JLabel label = new JLabel("Folder");
         field = new JTextField();
         this.parent = parent;
         approve = new JButton("Ok");

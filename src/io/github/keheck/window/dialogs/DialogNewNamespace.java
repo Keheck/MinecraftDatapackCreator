@@ -2,6 +2,7 @@ package io.github.keheck.window.dialogs;
 
 import io.github.keheck.Main;
 import io.github.keheck.Tasks;
+import io.github.keheck.util.Log;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,10 +16,11 @@ public class DialogNewNamespace extends JDialog
     public DialogNewNamespace()
     {
         super(Main.frame, "New Namespace");
-
         JPanel host = new JPanel();
-        JLabel label = new JLabel("Namespace");
         add(host);
+
+        Log.i("Opening dialog DialogNewNamespace");
+        JLabel label = new JLabel("Namespace");
         field = new JTextField();
 
         approve = new JButton("Ok");

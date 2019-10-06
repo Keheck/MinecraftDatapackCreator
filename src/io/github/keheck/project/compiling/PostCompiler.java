@@ -29,7 +29,7 @@ class PostCompiler
      */
     static void writeMCMeta()
     {
-        Log.f1("Writing mcmeta file...");
+        Log.i("Writing mcmeta file...");
         flushText(NavTree.meta);
     }
 
@@ -38,7 +38,7 @@ class PostCompiler
      */
     static void writeJsons()
     {
-        Log.f1("Writing all json files...");
+        Log.i("Writing all json files...");
         Set<NavTreeFile> jsons = filePaths.keySet();
 
         for(NavTreeFile file : jsons)
@@ -47,6 +47,8 @@ class PostCompiler
             {
                 try
                 {
+                    Log.f1("Writing json file " + file.getPath());
+
                     JsonParser parser = new JsonParser();
                     String json = String.join("\n", Main.texts.get(file));
                     parser.parse(json);
@@ -54,6 +56,7 @@ class PostCompiler
                 catch(JsonSyntaxException e)
                 {
                     Throwable cause = e.getCause() != null ? e.getCause() : e;
+                    Log.e("Failed to write " + file.getPath() + ": ", e);
                     errors.add(cause.getMessage());
                     continue;
                 }
@@ -68,13 +71,14 @@ class PostCompiler
      */
     static void writeMCFunctions()
     {
-        Log.f1("Flushing functions...");
+        Log.i("Flushing functions...");
         Set<NavTreeFile> functions = filePaths.keySet();
 
         for(NavTreeFile nodeFile : functions)
         {
             if(nodeFile.getType().getExtension().equals(".mcfunction"))
             {
+                Log.f1("Writing mcfunction file " + nodeFile.getPath());
                 ArrayList<NavTreeFolder> path = filePaths.get(nodeFile);
 
                 if(!presentPaths.contains(path))
@@ -132,6 +136,7 @@ class PostCompiler
                     }
                     catch (IOException e)
                     {
+                        Log.e("And error occured: ", e);
                         e.printStackTrace();
                     }
                 }
@@ -175,7 +180,7 @@ class PostCompiler
 
     static void writeVirtuals()
     {
-        Log.f1("Writing virtual nodes...");
+        Log.i("Writing virtual nodes...");
         Set<NavTreeFile> keys = Compiler.compiledVirtualCode.keySet();
 
         for(NavTreeFile key : keys)
@@ -184,6 +189,7 @@ class PostCompiler
             {
                 try
                 {
+                    Log.f1("Writing virtual if " + key.getPath());
                     File file = new File(root, "data/" + Main.project + "ifs/");
                     file.mkdirs();
                     file = new File(file, key.toString());
@@ -201,6 +207,8 @@ class PostCompiler
             {
                 try
                 {
+                    Log.f1("Writing virtual unless " + key.getPath());
+
                     File file = new File(root, "data/" + Main.project + "unlesss/");
                     file.mkdirs();
                     file = new File(file, key.toString());
@@ -243,6 +251,7 @@ class PostCompiler
                 }
                 catch (IOException e)
                 {
+                    Log.e("An I/O error occured while writing " + nodeFile.getPath() + ":", e);
                     e.printStackTrace();
                 }
             }
@@ -268,6 +277,7 @@ class PostCompiler
                 }
                 catch (IOException e)
                 {
+                    Log.e("An I/O error occured while writing " + nodeFile.getPath() + ":", e);
                     e.printStackTrace();
                 }
             }
@@ -284,6 +294,7 @@ class PostCompiler
             }
             catch (IOException e)
             {
+                Log.e("An I/O error occured while writing " + nodeFile.getPath() + ":", e);
                 e.printStackTrace();
             }
         }

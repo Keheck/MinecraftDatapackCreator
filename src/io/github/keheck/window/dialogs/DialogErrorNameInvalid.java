@@ -1,5 +1,7 @@
 package io.github.keheck.window.dialogs;
 
+import io.github.keheck.util.Log;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -14,7 +16,8 @@ public class DialogErrorNameInvalid extends JDialog
         this.add(panel);
 
         ok = new JButton("Ok");
-        JLabel label = new JLabel("Invalid name! Only alphanumerical, lowercase characters and the underscore");
+        Log.i("Opening dialog DialogErrorNameInvalid");
+        JLabel label = new JLabel("Invalid name! Only alphanumerical characters and the underscore");
         JPanel textWrapper = new JPanel();
         JLabel area = new JLabel(fileName);
         textWrapper.setBackground(new Color(255, 255, 255));

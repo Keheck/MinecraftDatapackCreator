@@ -3,6 +3,7 @@ package io.github.keheck.window.dialogs;
 import io.github.keheck.Main;
 import io.github.keheck.Tasks;
 import io.github.keheck.tree.AbstractNavTreeNode;
+import io.github.keheck.util.Log;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,11 +19,12 @@ public class DialogNewFile extends JDialog
     public DialogNewFile(AbstractNavTreeNode.NodeType type, AbstractNavTreeNode parent)
     {
         super(Main.frame, "New File");
-        this.type = type;
         JPanel panel = new JPanel();
         this.add(panel);
+        this.type = type;
         node = parent;
 
+        Log.i("Opening dialog DialogNewFile");
         JLabel label = new JLabel("File name");
         field = new JTextField();
 
