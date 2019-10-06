@@ -1,6 +1,7 @@
 package io.github.keheck.window.dialogs;
 
 import io.github.keheck.Main;
+import io.github.keheck.util.Log;
 
 import javax.swing.*;
 import java.awt.*;
@@ -8,11 +9,15 @@ import java.awt.*;
 public class DialogDynamic extends JDialog
 {
     private JLabel label;
+    private JLabel task;
+    private String currentTask;
 
     public DialogDynamic()
     {
         super(Main.frame, "Compiling...");
+        Log.i("Opening dialog DialogDynamic");
         label = new JLabel("Compiling");
+        task = new JLabel("What should I do?");
 
         JPanel host = new JPanel();
         this.add(host);
@@ -21,10 +26,12 @@ public class DialogDynamic extends JDialog
         host.setLayout(layout);
 
         layout.setVerticalGroup(layout.createSequentialGroup()
-                .addComponent(label));
+                .addComponent(label)
+                .addComponent(task));
 
         layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
-                .addComponent(label));
+                .addComponent(label)
+                .addComponent(task));
 
         setLocationRelativeTo(null);
         setResizable(false);
@@ -51,5 +58,10 @@ public class DialogDynamic extends JDialog
                 label.setText("Compiling");
                 break;
         }
+    }
+
+    public void updateTask(String newTask)
+    {
+        this.task.setText(newTask);
     }
 }

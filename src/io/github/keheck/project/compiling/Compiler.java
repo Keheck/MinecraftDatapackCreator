@@ -36,9 +36,11 @@ public class Compiler
 
     static boolean failed = false;
 
+    static Tasks.DialogUpdater thread;
+
     public static void init(File path)
     {
-        Thread thread = Tasks.constructDynamicDialog();
+        thread = (Tasks.DialogUpdater)Tasks.constructDynamicDialog();
         thread.start();
 
         Log.f1("Initializing Compiler...");
@@ -122,7 +124,6 @@ public class Compiler
             new DialogCompilationSuccess(root.getAbsolutePath());
         }
 
-        Log.f1("Deinitializing compiler...");
         deinit();
     }
 
@@ -138,6 +139,7 @@ public class Compiler
 
         for(NavTreeFile key : keys)
         {
+            thread.updateDialog("Simplifying " + key.getPath());
             mcfunctionCode.put(key, PreCompiler.preCompile(key, mcfunctionCode.get(key)));
         }
     }
@@ -150,6 +152,7 @@ public class Compiler
 
         for(NavTreeFile key : keys)
         {
+            thread.updateDialog("Compiling " + key.getPath());
             mcfunctionCode.put(key, compileFile(key));
         }
     }
@@ -161,12 +164,14 @@ public class Compiler
 
         for (VirtualIfNode node : ifKeys)
         {
+            thread.updateDialog("Compiling if " + node.getPath());
             compiledVirtualCode.put(node, compileFile(node));
             virtualIfs.remove(node);
         }
 
         for(VirtualUnlessNode node : unlessKeys)
         {
+            thread.updateDialog("Compiling unless " + node.getPath());
             compiledVirtualCode.put(node, compileFile(node));
             virtualUnlesss.remove(node);
         }
@@ -279,7 +284,7 @@ public class Compiler
                         if(leftPart.indexOf('[') > -1 && leftPart.indexOf('[') < leftPart.indexOf('{')) state = leftPart.substring(leftPart.indexOf('['), leftPart.indexOf(']') + 1);
 
                         if(!leftPart.equals(""))
-                            try { new ObjectMapper().readTree(nbt); }
+                            try { new ObjectMapper().readTree(nbt);}
                             catch (JsonProcessingException e) { throw new WrappedCompilationException(i+1, e, key.getPath()); }
                         if(!blocks.containsKey(block)) throw new UnexpectedTokenException("block variable " + block + " does not exist!", i+1, key.getPath());
 
@@ -360,7 +365,7 @@ public class Compiler
 
                     ifCode.remove(ifCode.size()-1);
                     i = j-1;
-                    VirtualIfNode node = new VirtualIfNode(ifCode, condition);
+                    VirtualIfNode node = new VirtualIfNode();
                     int compIndex = -1;
                     String comparator = "=";
                     String command = "execute if ";
@@ -459,7 +464,7 @@ public class Compiler
                     }
 
                     ifCode.remove(ifCode.size()-1);
-                    VirtualUnlessNode node = new VirtualUnlessNode(ifCode, condition);
+                    VirtualUnlessNode node = new VirtualUnlessNode();
                     int compIndex = -1;
                     String comparator = "=";
                     String command = "execute unless ";
@@ -591,6 +596,7 @@ public class Compiler
      */
     private static void deinit()
     {
+        Log.i("Deinitializing compiler");
         mcfunctionCode.clear();
         filePaths.clear();
         presentPaths.clear();
